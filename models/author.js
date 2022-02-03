@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const { DateTime } = require('luxon');
 
 var Schema = mongoose.Schema;
 
@@ -27,18 +28,18 @@ AuthorSchema.virtual('name').get(function () {
 AuthorSchema.virtual('lifespan').get(function () {
     var lifetime_string = '';
     if (this.date_of_birth) {
-        lifetime_string = this.date_of_birth.getYear().toString();
+        lifetime_string = DateTime.fromJSDate(this.date_of_birth).year;
     }
     lifetime_string += ' - ';
     if (this.date_of_death) {
-        lifetime_string += this.date_of_death.getYear();
+        lifetime_string += DateTime.fromJSDate(this.date_of_death).year;
     }
     return lifetime_string;
 });
 
 // Virtual for author's URL
 AuthorSchema.virtual('url').get(function () {
-    return 'catalog/author/' + this._id;
+    return '/catalog/author/' + this._id;
 });
 
 // Export model
