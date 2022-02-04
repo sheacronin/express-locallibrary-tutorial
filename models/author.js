@@ -37,6 +37,14 @@ AuthorSchema.virtual('lifespan').get(function () {
     return lifetime_string;
 });
 
+AuthorSchema.virtual('date_of_birth_yyyymmdd').get(function () {
+    return DateTime.fromJSDate(this.date_of_birth).toFormat('yyyy-LL-dd');
+});
+
+AuthorSchema.virtual('date_of_death_yyyymmdd').get(function () {
+    return DateTime.fromJSDate(this.date_of_death).toFormat('yyyy-LL-dd');
+});
+
 // Virtual for author's URL
 AuthorSchema.virtual('url').get(function () {
     return '/catalog/author/' + this._id;
