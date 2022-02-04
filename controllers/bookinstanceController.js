@@ -103,12 +103,41 @@ exports.bookinstance_create_post = [
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function (req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance delete GET');
+    BookInstance.findById(req.params.id)
+        .populate('book')
+        .exec((err, bookinstance) => {
+            if (err) {
+                return next(err);
+            }
+            if (bookinstance == null) {
+                res.redirect('/catalog/bookinstances');
+            }
+            res.render('bookinstance_delete', {
+                title: 'Delete BookInstance',
+                bookinstance: bookinstance,
+            });
+        });
 };
 
 // Handle BookInstance delete on POST.
 exports.bookinstance_delete_post = function (req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance delete POST');
+    BookInstance.findById(req.body.bookinstanceid)
+        .populate('book')
+        .exec((err, bookinstance) => {
+            if (err) {
+                return next(err);
+            }
+            BookInstance.findByIdAndRemove(
+                req.body.bookinstanceid,
+                function deleteBookInstance(err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    // Success - go to book instances list
+                    res.redirect('/catalog/bookinstances');
+                }
+            );
+        });
 };
 
 // Display BookInstance update form on GET.
